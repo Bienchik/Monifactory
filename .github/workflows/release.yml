@@ -50,27 +50,6 @@ on:
 permissions: {}
 
 jobs:
-  merge-lang:
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-      - name: Config git user
-        run: |
-          git config user.name 'Release workflow'
-          git config user.email 'ThePansmith@users.noreply.github.com'
-        shell: bash
-      - name: Merge lang branch
-        run: |
-          git fetch origin lang
-          git merge --squash origin/lang
-          git commit --no-edit
-        shell: bash
-      - run: git push
-        shell: bash
 
   pre-build:
     uses: ./.github/workflows/get_version_info.yml
@@ -84,7 +63,7 @@ jobs:
       packages: write
     uses: ./.github/workflows/build_pr.yml
     with:
-      target: build-all
+      target: build-client
       version: ${{ needs.pre-build.outputs.version }}
     secrets: inherit
 
@@ -195,9 +174,7 @@ jobs:
       - name: Get server and client file paths
         id: filepaths
         run: |
-          server_file=$(ls artifacts/build-zipzip/*server*.zip)
           client_file=$(ls artifacts/build-zipzip/*client*.zip)
-          echo "server_file=$server_file" >> "$GITHUB_OUTPUT"
           echo "client_file=$client_file" >> "$GITHUB_OUTPUT"
         shell: bash
 
