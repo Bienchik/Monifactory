@@ -76,7 +76,7 @@ jobs:
     uses: ./.github/workflows/get_version_info.yml
 
   build:
-    needs: [pre-build, merge-lang]
+    needs: [pre-build]
     if: inputs.skip_build != true
     permissions:
       id-token: write
